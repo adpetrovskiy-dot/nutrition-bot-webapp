@@ -94,7 +94,7 @@
         <div class="loading">Загрузка...</div>
     </div>
 
-       <script>
+    <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
@@ -109,6 +109,7 @@
             tg.close();
         }
 
+        // Показываем приветствие без фейковых данных
         document.getElementById('app').innerHTML = `
             <div class="header">
                 <h1>📱 Мой КБЖУ</h1>
@@ -130,52 +131,11 @@
             <button class="btn" onclick="addFood()">
                 🍽 Добавить еду
             </button>
+
+            <div style="margin-top: 20px; text-align: center; opacity: 0.6; font-size: 12px;">
+                Бот: @${tg.initDataUnsafe?.user?.username || 'ваш бот'}
+            </div>
         `;
-    </script>
-
-        function renderStats(data) {
-            const calPercent = (data.calories / data.calories_limit * 100).toFixed(0);
-            document.getElementById('app').innerHTML = `
-                <div class="header">
-                    <h1>📊 Сегодня</h1>
-                    <p style="opacity: 0.7">${new Date().toLocaleDateString('ru-RU')}</p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">Калории</div>
-                    <div class="card-value">${data.calories} / ${data.calories_limit}</div>
-                    <div class="progress">
-                        <div class="progress-fill" style="width: ${calPercent}%"></div>
-                    </div>
-                    <div style="margin-top: 8px; opacity: 0.7">
-                        Осталось: ${data.calories_limit - data.calories} ккал
-                    </div>
-                </div>
-
-                <div class="macros">
-                    <div class="macro-item">
-                        <div class="macro-label">🥩 Белки</div>
-                        <div class="macro-value">${data.protein}/${data.protein_limit}</div>
-                    </div>
-                    <div class="macro-item">
-                        <div class="macro-label">🥑 Жиры</div>
-                        <div class="macro-value">${data.fat}/${data.fat_limit}</div>
-                    </div>
-                    <div class="macro-item">
-                        <div class="macro-label">🍞 Углеводы</div>
-                        <div class="macro-value">${data.carbs}/${data.carbs_limit}</div>
-                    </div>
-                </div>
-
-                <button class="btn" onclick="addFood()">🍽 Добавить еду</button>
-            `;
-        }
-
-        function addFood() {
-            tg.sendData('add_food_from_webapp');
-        }
-
-        loadStats();
     </script>
 </body>
 </html>
