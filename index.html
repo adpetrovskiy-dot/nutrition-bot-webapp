@@ -94,38 +94,44 @@
         <div class="loading">Загрузка...</div>
     </div>
 
-    <script>
+       <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
-        const userId = tg.initDataUnsafe?.user?.id;
-
-        async function loadStats() {
-            if (!userId) {
-                document.getElementById('app').innerHTML = '<div class="card"><p>Откройте через бота</p></div>';
-                return;
-            }
-
-            try {
-                // Запрос к твоему боту (нужно добавить хендлер)
-                const response = await fetch(`/api/stats?user_id=${userId}`);
-                const data = await response.json();
-                renderStats(data);
-            } catch (e) {
-                // Демо-данные если API нет
-                renderStats({
-                    calories: 1450,
-                    calories_limit: 2000,
-                    protein: 120,
-                    protein_limit: 150,
-                    fat: 48,
-                    fat_limit: 67,
-                    carbs: 180,
-                    carbs_limit: 250
-                });
-            }
+        function requestStats() {
+            tg.sendData('get_stats');
+            tg.close();
         }
+
+        function addFood() {
+            tg.sendData('add_food');
+            tg.close();
+        }
+
+        document.getElementById('app').innerHTML = `
+            <div class="header">
+                <h1>📱 Мой КБЖУ</h1>
+                <p style="opacity: 0.7">Быстрый доступ к функциям</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">💡 Как пользоваться</div>
+                <p style="line-height: 1.6">
+                    Данные обновляются в реальном времени через бота.
+                    Нажмите кнопку ниже, чтобы получить актуальную статистику.
+                </p>
+            </div>
+
+            <button class="btn" onclick="requestStats()" style="background: #28a745;">
+                📊 Получить статистику
+            </button>
+
+            <button class="btn" onclick="addFood()">
+                🍽 Добавить еду
+            </button>
+        `;
+    </script>
 
         function renderStats(data) {
             const calPercent = (data.calories / data.calories_limit * 100).toFixed(0);
