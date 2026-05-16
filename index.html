@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой КБЖУ</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
+            padding: 16px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .card-title {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .progress {
+            height: 8px;
+            background: var(--tg-theme-hint-color, #ccc);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--tg-theme-button-color, #3390ec);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .macros {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+        .macro-item {
+            text-align: center;
+            padding: 12px;
+            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            border-radius: 8px;
+        }
+        .macro-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        .macro-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="loading">Загрузка...</div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        const userId = tg.initDataUnsafe?.user?.id;
+
+        async function loadStats() {
+            if (!userId) {
+                document.getElementById('app').innerHTML = '<div class="card"><p>Откройте через бота</p></div>';
+                return;
+            }
+
+            try {
+                // Запрос к твоему боту (нужно добавить хендлер)
+                const response = await fetch(`/api/stats?user_id=${userId}`);
+                const data = await response.json();
+                renderStats(data);
+            } catch (e) {
+                // Демо-данные если API нет
+                renderStats({
+                    calories: 1450,
+                    calories_limit: 2000,
+                    protein: 120,
+                    protein_limit: 150,
+                    fat: 48,
+                    fat_limit: 67,
+                    carbs: 180,
+                    carbs_limit: 250
+                });
+            }
+        }
+
+        function renderStats(data) {
+            const calPercent = (data.calories / data.calories_limit * 100).toFixed(0);
+            document.getElementById('app').innerHTML = `
+                <div class="header">
+                    <h1>📊 Сегодня</h1>
+                    <p style="opacity: 0.7">${new Date().toLocaleDateString('ru-RU')}</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Калории</div>
+                    <div class="card-value">${data.calories} / ${data.calories_limit}</div>
+                    <div class="progress">
+                        <div class="progress-fill" style="width: ${calPercent}%"></div>
+                    </div>
+                    <div style="margin-top: 8px; opacity: 0.7">
+                        Осталось: ${data.calories_limit - data.calories} ккал
+                    </div>
+                </div>
+
+                <div class="macros">
+                    <div class="macro-item">
+                        <div class="macro-label">🥩 Белки</div>
+                        <div class="macro-value">${data.protein}/${data.protein_limit}</div>
+                    </div>
+                    <div class="macro-item">
+                        <div class="macro-label">🥑 Жиры</div>
+                        <div class="macro-value">${data.fat}/${data.fat_limit}</div>
+                    </div>
+                    <div class="macro-item">
+                        <div class="macro-label">🍞 Углеводы</div>
+                        <div class="macro-value">${data.carbs}/${data.carbs_limit}</div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="addFood()">🍽 Добавить еду</button>
+            `;
+        }
+
+        function addFood() {
+            tg.sendData('add_food_from_webapp');
+        }
+
+        loadStats();
+    </script>
+</body>
+</html>
