@@ -12,142 +12,110 @@
             background: var(--tg-theme-bg-color, #f5f5f5);
             color: var(--tg-theme-text-color, #000);
             padding: 16px;
-            padding-bottom: 80px;
+            padding-bottom: 20px;
         }
-        .header {
-            text-align: center;
-            padding: 20px 0;
+        .header { text-align: center; padding: 20px 0; }
+        .header h1 { font-size: 24px; margin-bottom: 4px; }
+        .header p { opacity: 0.6; font-size: 14px; }
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #fff);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
         }
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 4px;
+        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+        .input-group { margin-bottom: 12px; }
+        .input-label { font-size: 13px; opacity: 0.7; margin-bottom: 4px; }
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
         }
-        .header p {
-            opacity: 0.6;
-            font-size: 14px;
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--tg-theme-button-color, #3390ec);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 12px;
         }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
+        .btn-green { background: #28a745; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
         .stat-card {
             background: var(--tg-theme-secondary-bg-color, #fff);
             border-radius: 12px;
             padding: 16px;
             text-align: center;
         }
-        .stat-label {
-            font-size: 12px;
-            opacity: 0.6;
-            margin-bottom: 6px;
-        }
-        .stat-value {
-            font-size: 22px;
-            font-weight: bold;
-        }
-        .stat-sub {
-            font-size: 12px;
-            opacity: 0.5;
-            margin-top: 4px;
-        }
-        .progress-section {
-            background: var(--tg-theme-secondary-bg-color, #fff);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        .progress-bar {
-            height: 10px;
-            background: var(--tg-theme-hint-color, #ddd);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: var(--tg-theme-button-color, #3390ec);
-            border-radius: 5px;
-            transition: width 0.5s ease;
-        }
-        .meal-list {
-            background: var(--tg-theme-secondary-bg-color, #fff);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        .meal-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .meal-item:last-child {
-            border-bottom: none;
+        .stat-label { font-size: 12px; opacity: 0.6; margin-bottom: 6px; }
+        .stat-value { font-size: 22px; font-weight: bold; }
+        .hidden { display: none; }
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: var(--tg-theme-button-color, #3390ec);
+            font-size: 14px;
+            margin-bottom: 12px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>📊 Статистика</h1>
-        <p id="date">Сегодня</p>
-    </div>
+    <div id="main-menu">
+        <div class="header">
+            <h1>📱 Мой КБЖУ</h1>
+            <p id="date">Сегодня</p>
+        </div>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-label">🔥 Калории</div>
-            <div class="stat-value" id="cal-val">0</div>
-            <div class="stat-sub">из <span id="cal-limit">2000</span></div>
+        <div class="card">
+            <div class="card-title">📊 Статистика</div>
+            <button class="btn btn-green" onclick="showStats()">Посмотреть статистику</button>
         </div>
-        <div class="stat-card">
-            <div class="stat-label">🥩 Белки</div>
-            <div class="stat-value" id="prot-val">0г</div>
-            <div class="stat-sub">из <span id="prot-limit">150</span>г</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">🥑 Жиры</div>
-            <div class="stat-value" id="fat-val">0г</div>
-            <div class="stat-sub">из <span id="fat-limit">67</span>г</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">🍞 Углеводы</div>
-            <div class="stat-value" id="carb-val">0г</div>
-            <div class="stat-sub">из <span id="carb-limit">250</span>г</div>
+
+        <div class="card">
+            <div class="card-title">🍽 Добавить еду</div>
+            <button class="btn" onclick="showAddFood()">Через бота</button>
+            <button class="btn btn-green" onclick="showManualInput()">Ручной ввод КБЖУ</button>
         </div>
     </div>
 
-    <div class="progress-section">
-        <div class="progress-header">
-            <span>Калории</span>
-            <span id="cal-percent">0%</span>
+    <div id="manual-input" class="hidden">
+        <button class="back-btn" onclick="goBack()">← Назад</button>
+        <div class="header">
+            <h1>Ручной ввод</h1>
         </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="cal-bar" style="width: 0%"></div>
-        </div>
-    </div>
 
-    <div class="meal-list">
-        <div style="font-weight: 600; margin-bottom: 10px;">🍽 Приёмы пищи</div>
-        <div class="meal-item">
-            <span>Завтрак</span>
-            <span>—</span>
-        </div>
-        <div class="meal-item">
-            <span>Обед</span>
-            <span>—</span>
-        </div>
-        <div class="meal-item">
-            <span>Ужин</span>
-            <span>—</span>
-        </div>
-        <div class="meal-item">
-            <span>Перекус</span>
-            <span>—</span>
+        <div class="card">
+            <div class="card-title">Введите КБЖУ</div>
+            <div class="grid-2">
+                <div class="input-group">
+                    <div class="input-label">🔥 Калории</div>
+                    <input type="number" id="calories" class="input-field" placeholder="0">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">🥩 Белки (г)</div>
+                    <input type="number" id="protein" class="input-field" placeholder="0">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">🥑 Жиры (г)</div>
+                    <input type="number" id="fat" class="input-field" placeholder="0">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">🍞 Углеводы (г)</div>
+                    <input type="number" id="carbs" class="input-field" placeholder="0">
+                </div>
+            </div>
+            <button class="btn btn-green" onclick="submitManual()">Сохранить</button>
         </div>
     </div>
 
@@ -156,46 +124,40 @@
         tg.ready();
         tg.expand();
 
-        // Устанавливаем дату
         document.getElementById('date').textContent = new Date().toLocaleDateString('ru-RU', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long'
+            weekday: 'long', day: 'numeric', month: 'long'
         });
 
-        // Демо-данные (в будущем можно получать с сервера)
-        const stats = {
-            calories: 1450,
-            calories_limit: 2000,
-            protein: 120,
-            protein_limit: 150,
-            fat: 48,
-            fat_limit: 67,
-            carbs: 180,
-            carbs_limit: 250
-        };
+        function showStats() {
+            tg.sendData('get_stats');
+            tg.close();
+        }
 
-        // Заполняем статистику
-        document.getElementById('cal-val').textContent = stats.calories;
-        document.getElementById('cal-limit').textContent = stats.calories_limit;
-        document.getElementById('prot-val').textContent = stats.protein + 'г';
-        document.getElementById('fat-val').textContent = stats.fat + 'г';
-        document.getElementById('carb-val').textContent = stats.carbs + 'г';
-
-        // Прогресс-бар калорий
-        const percent = Math.round((stats.calories / stats.calories_limit) * 100);
-        document.getElementById('cal-percent').textContent = percent + '%';
-        document.getElementById('cal-bar').style.width = percent + '%';
-
-        // Настраиваем MainButton Telegram
-        tg.MainButton.setText('🍽 Добавить еду');
-        tg.MainButton.setParams({ color: '#28a745', text_color: '#ffffff' });
-        tg.MainButton.show();
-
-        tg.MainButton.onClick(() => {
+        function showAddFood() {
             tg.sendData('add_food');
             tg.close();
-        });
+        }
+
+        function showManualInput() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('manual-input').classList.remove('hidden');
+        }
+
+        function goBack() {
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('manual-input').classList.add('hidden');
+        }
+
+        function submitManual() {
+            const calories = document.getElementById('calories').value || '0';
+            const protein = document.getElementById('protein').value || '0';
+            const fat = document.getElementById('fat').value || '0';
+            const carbs = document.getElementById('carbs').value || '0';
+
+            const data = `manual_food:${calories}:${protein}:${fat}:${carbs}`;
+            tg.sendData(data);
+            tg.close();
+        }
     </script>
 </body>
 </html>
